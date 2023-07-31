@@ -44,7 +44,7 @@ Data & File Overview
 --------------------
 
 ### File list:
--- Ceramic_Network_Analysis.rmd - R-markdown file containing reproducible code for remote sensing analysis of legacy niche construction and ecological impacts of human activities on SW Madagascar. The code uses satellite datasets from PlanetInc which cannot be shared on this repository and archaeological site data which can be shared upon reasonable request.
+-- Socioeconomic_Analysis.rmd - R-markdown file containing reproducible code for remote sensing analysis of legacy niche construction and ecological impacts of human activities on SW Madagascar. The code uses satellite datasets from Planet Inc. which cannot be shared on this repository and archaeological site data which can be shared upon reasonable request.
 
 
 ### Additional notes:
