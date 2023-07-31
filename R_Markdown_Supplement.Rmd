@@ -1,0 +1,928 @@
+---
+title: "Subsistence_Comparison"
+author: "Dylan S. Davis"
+date: '2022-08-26'
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document containing code used to conduct the analyses reported in the manuscript. This analysis was originally created in R v.4.0.2 (R Core Team 2020). PlanetScope imagery used for this analysis is proprietary (c) Planet Inc. 2022. Archaeological datapoints can be shared upon reasonable request, but are not provided to protect their geographic coordinates. 
+
+
+Load libraries and datasets
+
+```{r}
+library(raster)
+library(rgdal)
+library(ggplot2)
+
+
+#set working directory
+setwd("C:/Users/dylan/Documents/School_Work/Dissertation/SPARC_Namonte")
+
+#load archaeological point file
+arch_points <- readOGR(dsn = "Mikea_Survey_2018.shp")
+
+#load ground-tested non-archaeological point locations 
+
+
+non_arch_points <- readOGR(dsn = "Non_Arch_Points.shp")
+
+##Foraging Site Analysis
+
+#set working directory
+setwd("C:/Users/dylan/Documents/School_Work/Dissertation/GEE_test/Planet_test")
+
+V_arch_points <- readOGR(dsn = "Arch_total_pts.shp")
+
+V_non_arch_points <- readOGR(dsn = "non_arch_pts.shp")
+
+##Mixed subsistence analysis
+#set working directory
+setwd("C:/Users/dylan/Documents/School_Work/Madagascar Projects/NCT_Project") #replace with the full path to file that you are working with
+
+F_arch_points <- readOGR(dsn = "Foraging_Sites_19_20.shp") #primarily foraging
+
+M_arch_points <- readOGR(dsn = "Mixed_Sites_v2.shp") #mixed subsistence
+
+#Create Median Averaged Images for Multitemporal Analysis
+
+#load each band of the composite image created in GEE
+J18_B1 <- raster("June18mrg.tif", band = 1)
+J19_B1 <- raster("June19mrg.tif", band = 1)
+J20_B1 <- raster("June20mrg.tif", band = 1)
+J21_B1 <- raster("June21mrg.tif", band = 1)
+
+J_B1 <- raster::stack(J18_B1, J19_B1, J20_B1, J21_B1)
+J_B1_Med <- raster::calc(J_B1, median) #takes a long time depending on your computer
+
+J18_B2 <- raster("June18mrg.tif", band = 2)
+J19_B2 <- raster("June19mrg.tif", band = 2)
+J20_B2 <- raster("June20mrg.tif", band = 2)
+J21_B2 <- raster("June21mrg.tif", band = 2)
+
+J_B2 <- raster::stack(J18_B2, J19_B2, J20_B2, J21_B2)
+J_B2_Med <- raster::calc(J_B2, median)
+
+J18_B3 <- raster("June18mrg.tif", band = 3)
+J19_B3 <- raster("June19mrg.tif", band = 3)
+J20_B3 <- raster("June20mrg.tif", band = 3)
+J21_B3 <- raster("June21mrg.tif", band = 3)
+
+J_B3 <- raster::stack(J18_B3, J19_B3, J20_B3, J21_B3)
+J_B3_Med <- raster::calc(J_B3, median)
+
+J18_B4 <- raster("June18mrg.tif", band = 4)
+J19_B4 <- raster("June19mrg.tif", band = 4)
+J20_B4 <- raster("June20mrg.tif", band = 4)
+J21_B4 <- raster("June21mrg.tif", band = 4)
+
+J_B4 <- raster::stack(J18_B4, J19_B4, J20_B4, J21_B4)
+J_B4_Med <- raster::calc(J_B4, median)
+
+J_med_comp <- raster::stack(J_B1_Med, J_B2_Med, J_B3_Med, J_B4_Med) #create a raster image stack of all the individual bands
+writeRaster(J_med_comp, "June_Med.tiff")
+
+
+F18_B1 <- raster("Feb18mrg.tif", band = 1)
+F19_B1 <- raster("Feb19mrg.tif", band = 1)
+F20_B1 <- raster("Feb20mrg.tif", band = 1)
+F21_B1 <- raster("Feb21mrg.tif", band = 1)
+
+F_B1 <- raster::stack(F18_B1, F19_B1, F20_B1, F21_B1)
+F_B1_Med <- raster::calc(F_B1, median)
+
+
+F18_B2 <- raster("Feb18mrg.tif", band = 2)
+F19_B2 <- raster("Feb19mrg.tif", band = 2)
+F20_B2 <- raster("Feb20mrg.tif", band = 2)
+F21_B2 <- raster("Feb21mrg.tif", band = 2)
+
+F_B2 <- raster::stack(F18_B2, F19_B2, F20_B2, F21_B2)
+F_B2_Med <- raster::calc(F_B2, median)
+
+F18_B3 <- raster("Feb18mrg.tif", band = 3)
+F19_B3 <- raster("Feb19mrg.tif", band = 3)
+F20_B3 <- raster("Feb20mrg.tif", band = 3)
+F21_B3 <- raster("Feb21mrg.tif", band = 3)
+
+
+F_B3 <- raster::stack(F18_B3, F19_B3, F20_B3, F21_B3)
+F_B3_Med <- raster::calc(F_B3, median)
+
+F18_B4 <- raster("Feb18mrg.tif", band = 4)
+F19_B4 <- raster("Feb19mrg.tif", band = 4)
+F20_B4 <- raster("Feb20mrg.tif", band = 4)
+F21_B4 <- raster("Feb21mrg.tif", band = 4)
+
+F_B4 <- raster::stack(F18_B4, F19_B4, F20_B4, F21_B4)
+F_B4_Med <- raster::calc(F_B4, median)
+
+F_med_comp <- raster::stack(F_B1_Med, F_B2_Med, F_B3_Med, F_B4_Med)
+writeRaster(F_med_comp, "Feb_Med.tiff")
+
+
+#Load median composites that we just generated
+
+J_B1 <- raster("June_Med.tif", band = 1)
+J_B2 <- raster("June_Med.tif", band = 2)
+J_B3 <- raster("June_Med.tif", band = 3)
+J_B4 <- raster("June_Med.tif", band = 4)
+
+DS_Comp <- raster::stack(J_B1, J_B2, J_B3, J_B4)
+
+F_B1 <- raster("Feb_Med.tif", band = 1)
+F_B2 <- raster("Feb_Med.tif", band = 2)
+F_B3 <- raster("Feb_Med.tif", band = 3)
+F_B4 <- raster("Feb_Med.tif", band = 4)
+
+WS_Comp <- raster::stack(F_B1, F_B2, F_B3, F_B4)
+
+#Create NDVI
+NDVI_Feb = (WS_Comp[[4]] - WS_Comp[[3]])/(WS_Comp[[4]] + WS_Comp[[3]])
+
+NDVI_Jun = (DS_Comp[[4]] - DS_Comp[[3]])/(DS_Comp[[4]] + DS_Comp[[3]])
+
+
+```
+Spectral Analysis for Wet and Dry Seasons
+
+```{r}
+#Extract raster values at each archaeological point location
+#Depending on the size of the study region and processing power
+#of your computer, this can take a while to run
+N_arch_DS=extract(DS_Comp, arch_points, buffer=20, fun=mean)
+N_Narc_DS=extract(DS_Comp, non_arch_points, buffer=20, fun=mean)
+
+V_arch_DS=extract(DS_Comp, V_arch_points, buffer=20, fun=mean)
+V_Narc_DS=extract(DS_Comp, V_non_arch_points, buffer=20, fun=mean)
+
+
+#Subset analysis of known foraging, pastoralist, and mixed subsistence sites
+F_arch_DS=extract(DS_Comp, F_arch_points, buffer=20, fun=mean)
+F_arch_DS <- na.omit(F_arch_DS)
+M_arch_DS=extract(DS_Comp, M_arch_points, buffer=20, fun=mean)
+M_arch_DS <- na.omit(M_arch_DS)
+
+#Wet Season
+N_arch_WS=extract(WS_Comp, arch_points, buffer=20, fun=mean)
+N_Narc_WS=extract(WS_Comp, non_arch_points, buffer=20, fun=mean)
+
+V_arch_WS=extract(WS_Comp, V_arch_points, buffer=20, fun=mean)
+V_Narc_WS=extract(WS_Comp, V_non_arch_points, buffer=20, fun=mean)
+
+F_arch_WS=extract(WS_Comp, F_arch_points, buffer=20, fun=mean)
+M_arch_WS=extract(WS_Comp, M_arch_points, buffer=20, fun=mean)
+
+
+#Standardize data values for comparison of data from different regions
+
+standard <- function(x, y) {                              # Create user-defined function
+  min(y) + ((x - min(x))*(max(y)-min(y))) / (max(x) - min(x))
+}
+
+
+N_arch_DS_s <- standard(N_arch_DS, N_Narc_DS) 
+N_Narc_DS_s <- standard(N_Narc_DS, N_Narc_DS)
+V_arch_DS_s <- standard(V_arch_DS, N_Narc_DS) #already standardized against itself
+V_Narc_DS_s <- standard(V_Narc_DS, V_Narc_DS) #don't standardize
+
+F_arch_DS_s <- standard(F_arch_DS, N_Narc_DS)
+M_arch_DS_s <- standard(M_arch_DS, N_Narc_DS)
+
+#make data frames from each raster point table for Dry Season
+DS_arc_df <- data.frame(N_arch_DS_s)
+DS_Narc_df <- data.frame(N_Narc_DS_s)
+
+DS_v_arc_df <- data.frame(V_arch_DS_s)
+DS_v_Narc_df <- data.frame(V_Narc_DS_s)
+#assess possibility of mixed subsistence on results
+DS_m_arc_df <- data.frame(M_arch_DS_s) #mixed sites (contains domesticate animal bones and fishing/foraging evidence)
+DS_f_arc_df <- data.frame(F_arch_DS_s) #foraging/fishing only (no animal bones)
+
+#add new column named "cat" (for category)
+DS_arc_df$cat <- "Inland Pastoralist" #archaeological points
+DS_Narc_df$cat <- "Non-Arc-Mikea" #non-archaeological points
+DS_v_arc_df$cat <- "Coastal Communities" #archaeological points
+DS_v_Narc_df$cat <- "Non-Arc-Velo" #non-archaeological points
+
+DS_f_arc_df$cat <- "Fishing/Foraging (only)" #archaeological points
+DS_m_arc_df$cat <- "Mixed Subsistence"
+
+#combine both dataframes into a single dataframe
+DS_df <- rbind(DS_arc_df, DS_v_arc_df, DS_f_arc_df, DS_m_arc_df)
+
+#standardize values for wet season
+N_arch_WS_s <- standard(N_arch_WS, N_Narc_WS) 
+N_Narc_WS_s <- standard(N_Narc_WS, N_Narc_WS)
+V_arch_WS_s <- standard(V_arch_WS, N_Narc_WS) #already standardized against itself
+V_Narc_WS_s <- standard(V_Narc_WS, V_Narc_WS) #don't standardize
+
+F_arch_WS_s <- standard(F_arch_WS, N_Narc_WS)
+M_arch_WS_s <- standard(M_arch_WS, N_Narc_WS)
+
+#make data frames from each raster point table for Wet Season
+WS_arc_df <- data.frame(N_arch_WS)
+WS_Narc_df <- data.frame(N_Narc_WS)
+
+WS_v_arc_df <- data.frame(V_arch_WS)
+WS_v_Narc_df <- data.frame(V_Narc_WS)
+#assess possibility of mixed subsistence on results
+WS_m_arc_df <- data.frame(M_arch_WS)
+WS_f_arc_df <- data.frame(F_arch_WS)
+
+#add new column named "cat" (for category)
+WS_arc_df$cat <- "Inland Pastoralist" #archaeological points
+WS_Narc_df$cat <- "Non-Arc-Mikea" #non-archaeological points
+WS_v_arc_df$cat <- "Coastal Communities" #archaeological points
+WS_v_Narc_df$cat <- "Non-Arc-Velo" #non-archaeological points
+
+WS_f_arc_df$cat <- "Fishing/Foraging (only)" #archaeological points
+WS_m_arc_df$cat <- "Mixed Subsistence"
+
+#combine both dataframes into a single dataframe
+WS_df <- rbind(WS_arc_df, WS_v_arc_df, WS_f_arc_df, WS_m_arc_df)
+
+
+#Calculate Separability Metric (M)
+
+M_b1 <- abs((mean(WS_arc_df$Feb_Med.1)-mean(WS_v_arc_df$Feb_Med.1))/(sd(WS_arc_df$Feb_Med.1)+sd(WS_v_arc_df$Feb_Med.1)))
+M_b2 <- abs((mean(WS_arc_df$Feb_Med.2)-mean(WS_v_arc_df$Feb_Med.2))/(sd(WS_arc_df$Feb_Med.2)+sd(WS_v_arc_df$Feb_Med.2)))
+M_b3 <- abs((mean(WS_arc_df$Feb_Med.3)-mean(WS_v_arc_df$Feb_Med.3))/(sd(WS_arc_df$Feb_Med.3)+sd(WS_v_arc_df$Feb_Med.3)))
+M_b4 <- abs((mean(WS_arc_df$Feb_Med.4)-mean(WS_v_arc_df$Feb_Med.4))/(sd(WS_arc_df$Feb_Med.4)+sd(WS_v_arc_df$Feb_Med.4)))
+
+wilcox.test(WS_arc_df$Feb_Med.1, WS_v_arc_df$Feb_Med.1)
+wilcox.test(WS_arc_df$Feb_Med.2, WS_v_arc_df$Feb_Med.2)
+wilcox.test(WS_arc_df$Feb_Med.3, WS_v_arc_df$Feb_Med.3)
+wilcox.test(WS_arc_df$Feb_Med.4, WS_v_arc_df$Feb_Med.4)
+
+wilcox.test(WS_arc_df$Feb_Med.1, WS_f_arc_df$Feb_Med.1)
+wilcox.test(WS_arc_df$Feb_Med.2, WS_f_arc_df$Feb_Med.2)
+wilcox.test(WS_arc_df$Feb_Med.3, WS_f_arc_df$Feb_Med.3)
+wilcox.test(WS_arc_df$Feb_Med.4, WS_f_arc_df$Feb_Med.4)
+
+wilcox.test(WS_arc_df$Feb_Med.1, WS_m_arc_df$Feb_Med.1)
+wilcox.test(WS_arc_df$Feb_Med.2, WS_m_arc_df$Feb_Med.2)
+wilcox.test(WS_arc_df$Feb_Med.3, WS_m_arc_df$Feb_Med.3)
+wilcox.test(WS_arc_df$Feb_Med.4, WS_m_arc_df$Feb_Med.4)
+
+wilcox.test(WS_f_arc_df$Feb_Med.1, WS_m_arc_df$Feb_Med.1)
+wilcox.test(WS_f_arc_df$Feb_Med.2, WS_m_arc_df$Feb_Med.2)
+wilcox.test(WS_f_arc_df$Feb_Med.3, WS_m_arc_df$Feb_Med.3)
+wilcox.test(WS_f_arc_df$Feb_Med.4, WS_m_arc_df$Feb_Med.4)
+
+M_b1 <- abs((mean(DS_arc_df$June_Med.1)-mean(DS_v_arc_df$June_Med.1))/(sd(DS_arc_df$June_Med.1)+sd(DS_v_arc_df$June_Med.1)))
+M_b2 <- abs((mean(DS_arc_df$June_Med.2)-mean(DS_v_arc_df$June_Med.2))/(sd(DS_arc_df$June_Med.2)+sd(DS_v_arc_df$June_Med.2)))
+M_b3 <- abs((mean(DS_arc_df$June_Med.3)-mean(DS_v_arc_df$June_Med.3))/(sd(DS_arc_df$June_Med.3)+sd(DS_v_arc_df$June_Med.3)))
+M_b4 <- abs((mean(DS_arc_df$June_Med.4)-mean(DS_v_arc_df$June_Med.4))/(sd(DS_arc_df$June_Med.4)+sd(DS_v_arc_df$June_Med.4)))
+
+M_b1
+M_b2
+M_b3
+M_b4
+
+wilcox.test(DS_arc_df$June_Med.1, DS_v_arc_df$June_Med.1)
+wilcox.test(DS_arc_df$June_Med.2, DS_v_arc_df$June_Med.2)
+wilcox.test(DS_arc_df$June_Med.3, DS_v_arc_df$June_Med.3)
+wilcox.test(DS_arc_df$June_Med.4, DS_v_arc_df$June_Med.4)
+
+M_b1 <- abs((mean(DS_arc_df$June_Med.1)-mean(DS_f_arc_df$June_Med.1))/(sd(DS_arc_df$June_Med.1)+sd(DS_f_arc_df$June_Med.1)))
+M_b2 <- abs((mean(DS_arc_df$June_Med.2)-mean(DS_f_arc_df$June_Med.2))/(sd(DS_arc_df$June_Med.2)+sd(DS_f_arc_df$June_Med.2)))
+M_b3 <- abs((mean(DS_arc_df$June_Med.3)-mean(DS_f_arc_df$June_Med.3))/(sd(DS_arc_df$June_Med.3)+sd(DS_f_arc_df$June_Med.3)))
+M_b4 <- abs((mean(DS_arc_df$June_Med.4)-mean(DS_f_arc_df$June_Med.4))/(sd(DS_arc_df$June_Med.4)+sd(DS_f_arc_df$June_Med.4)))
+
+M_b1
+M_b2
+M_b3
+M_b4
+
+wilcox.test(DS_arc_df$June_Med.1, DS_f_arc_df$June_Med.1)
+wilcox.test(DS_arc_df$June_Med.2, DS_f_arc_df$June_Med.2)
+wilcox.test(DS_arc_df$June_Med.3, DS_f_arc_df$June_Med.3)
+wilcox.test(DS_arc_df$June_Med.4, DS_f_arc_df$June_Med.4)
+
+wilcox.test(DS_arc_df$June_Med.1, DS_m_arc_df$June_Med.1)
+wilcox.test(DS_arc_df$June_Med.2, DS_m_arc_df$June_Med.2)
+wilcox.test(DS_arc_df$June_Med.3, DS_m_arc_df$June_Med.3)
+wilcox.test(DS_arc_df$June_Med.4, DS_m_arc_df$June_Med.4)
+
+wilcox.test(DS_m_arc_df$June_Med.1, DS_f_arc_df$June_Med.1)
+wilcox.test(DS_m_arc_df$June_Med.2, DS_f_arc_df$June_Med.2)
+wilcox.test(DS_m_arc_df$June_Med.3, DS_f_arc_df$June_Med.3)
+wilcox.test(DS_m_arc_df$June_Med.4, DS_f_arc_df$June_Med.4)
+
+#calculate average non-archaeological values
+NA_B_DS_V <- mean(N_Narc_DS[,1])
+NA_B_DS_M <- mean(V_Narc_DS[,1])
+NA_B_DS <- (NA_B_DS_V+NA_B_DS_M)/2
+
+NA_G_DS_V <- mean(N_Narc_DS[,2])
+NA_G_DS_M <- mean(V_Narc_DS[,2])
+NA_G_DS <- (NA_B_DS_V+NA_B_DS_M)/2
+
+NA_R_DS_V <- mean(N_Narc_DS[,3])
+NA_R_DS_M <- mean(V_Narc_DS[,3])
+NA_R_DS <- (NA_B_DS_V+NA_B_DS_M)/2
+
+NA_NIR_DS_V <- mean(N_Narc_DS[,4])
+NA_NIR_DS_M <- mean(V_Narc_DS[,4])
+NA_NIR_DS <- (NA_B_DS_V+NA_B_DS_M)/2
+
+
+#wet season
+NA_B_WS_V <- mean(N_Narc_WS[,1])
+NA_B_WS_M <- mean(V_Narc_WS[,1])
+NA_B_WS <- (NA_B_WS_V+NA_B_WS_M)/2
+
+NA_G_WS_V <- mean(N_Narc_WS[,2])
+NA_G_WS_M <- mean(V_Narc_WS[,2])
+NA_G_WS <- (NA_G_WS_V+NA_G_WS_M)/2
+
+NA_R_WS_V <- mean(N_Narc_WS[,3])
+NA_R_WS_M <- mean(V_Narc_WS[,3])
+NA_R_WS <- (NA_R_WS_V+NA_R_WS_M)/2
+
+NA_NIR_WS_V <- mean(N_Narc_WS[,4])
+NA_NIR_WS_M <- mean(V_Narc_WS[,4])
+NA_NIR_WS <- (NA_NIR_WS_V+NA_NIR_WS_M)/2
+
+```
+
+Plot Results
+```{r}
+#Reorder categories for plotting
+WS_df$cat <- factor(WS_df$cat, c("Coastal Communities", "Inland Pastoralist", "Fishing/Foraging (only)", "Mixed Subsistence"))
+DS_df$cat <- factor(DS_df$cat, c("Coastal Communities", "Inland Pastoralist", "Fishing/Foraging (only)", "Mixed Subsistence"))
+
+library(gridExtra)
+B1 <- ggplot(WS_df, aes(WS_df, fill=cat))+
+  geom_boxplot(aes(cat, Feb_Med.1))+
+  xlab("Land use Type")+
+  ylab("Blue")+
+  theme(axis.text = element_text(size = 20))+
+  theme(axis.title = element_text(size = 20))+
+  theme(axis.text.x=element_blank(),
+        legend.position = "none")+
+  geom_hline(yintercept=NA_B_WS, color="#006600", linetype="dotted", size=1.5)
+
+B2 <- ggplot(WS_df, aes(WS_df, fill=cat))+
+  geom_boxplot(aes(cat, Feb_Med.1))+
+  xlab("Land use Type")+
+  ylab("Green")+
+  theme(axis.text = element_text(size = 20))+
+  theme(axis.title = element_text(size = 20))+
+  theme(axis.text.x=element_blank(),
+        legend.position = "none")+
+  geom_hline(yintercept=NA_G_WS, color="#006600", linetype="dotted", size=1.5)
+
+B3 <- ggplot(WS_df, aes(WS_df, fill=cat))+
+  geom_boxplot(aes(cat, Feb_Med.1))+
+  xlab("Land use Type")+
+  ylab("Red")+
+  theme(axis.text = element_text(size = 20))+
+  theme(axis.title = element_text(size = 20))+
+  theme(axis.text.x=element_blank(),
+        legend.position = "none")+
+  geom_hline(yintercept=NA_R_WS, color="#006600", linetype="dotted", size=1.5)
+
+B4 <- ggplot(WS_df, aes(WS_df, fill=cat))+
+  geom_boxplot(aes(cat, Feb_Med.1))+
+  xlab("Land use Type")+
+  ylab("NIR")+
+  theme(legend.text = element_text(size = 20))+
+  theme(axis.text = element_text(size = 20))+
+  theme(axis.title = element_text(size = 20))+
+  theme(axis.text.x=element_blank(),
+        legend.title = element_blank(),
+        legend.position="bottom")+
+  geom_hline(yintercept=NA_NIR_WS, color="#006600", linetype="dotted", size=1.5)
+
+
+grid.arrange(B1, B2, B3, B4, ncol=2, nrow=2)
+
+
+
+B1 <- ggplot(DS_df, aes(DS_df, fill=cat))+
+  geom_boxplot(aes(cat, June_Med.1))+
+  xlab("Land use Type")+
+  ylab("Blue")+
+  theme(axis.text = element_text(size = 20))+
+  theme(axis.title = element_text(size = 20))+
+  theme(axis.text.x=element_blank(),
+        legend.position = "none")+
+  geom_hline(yintercept=NA_B_DS, color="#006600", linetype="dotted", size=1.5)
+
+B2 <- ggplot(DS_df, aes(DS_df, fill=cat))+
+  geom_boxplot(aes(cat, June_Med.2))+
+  xlab("Land use Type")+
+  ylab("Green")+
+  theme(axis.text = element_text(size = 20))+
+  theme(axis.title = element_text(size = 20))+
+  theme(axis.text.x=element_blank(),
+        legend.position = "none")+
+  geom_hline(yintercept=NA_G_DS, color="#006600", linetype="dotted", size=1.5)
+
+B3 <- ggplot(DS_df, aes(DS_df, fill=cat))+
+  geom_boxplot(aes(cat, June_Med.3))+
+  xlab("Land use Type")+
+  ylab("Red")+
+  theme(axis.text = element_text(size = 20))+
+  theme(axis.title = element_text(size = 20))+
+  theme(axis.text.x=element_blank(),
+        legend.position = "none")+
+  geom_hline(yintercept=NA_R_DS, color="#006600", linetype="dotted", size=1.5)
+
+B4 <- ggplot(DS_df, aes(DS_df, fill=cat))+
+  geom_boxplot(aes(cat, June_Med.4))+
+  xlab("Land use Type")+
+  ylab("NIR")+
+  theme(legend.text = element_text(size = 20))+
+  theme(axis.text = element_text(size = 20))+
+  theme(axis.title = element_text(size = 20))+
+  theme(axis.text.x=element_blank(),
+        legend.title = element_blank(),
+        legend.position="bottom")+
+  geom_hline(yintercept=NA_NIR_DS, color="#006600", linetype="dotted", size=1.5)
+
+
+grid.arrange(B1, B2, B3, B4, ncol=2, nrow=2)
+
+```
+
+Annual Spectral Analysis 
+```{r}
+S_Dif <- abs(DS_Comp - WS_Comp)
+
+#Extract Values
+N_arch=extract(S_Dif, arch_points, buffer=20, fun=mean)
+N_Narc=extract(S_Dif, non_arch_points, buffer=20, fun=mean)
+
+V_arch=extract(S_Dif, V_arch_points, buffer=20, fun=mean)
+V_Narc=extract(S_Dif, V_non_arch_points, buffer=20, fun=mean)
+
+M_arc=extract(S_Dif, M_arch_points, buffer=20, fun=mean)
+M_arc <- na.omit(M_arc)
+F_arc=extract(S_Dif, F_arch_points, buffer=20, fun=mean)
+F_arc <- na.omit(F_arc)
+
+#Standardize data
+N_arch_s <- abs(standard(N_arch, V_Narc)) 
+N_Narc_s <- abs(standard(N_Narc, V_Narc))
+V_arch_s <- abs(standard(V_arch, V_Narc)) #already standardized against itself
+V_Narc_s <- abs(standard(V_Narc, V_Narc))
+F_arch_s <- abs(standard(F_arc, V_Narc))
+M_arch_s <- abs(standard(M_arc, V_Narc))
+
+
+#make data frames from each raster point table
+arc_df <- data.frame(N_arch_s)
+Narc_df <- data.frame(N_Narc_s)
+
+v_arc_df <- data.frame(V_arch_s)
+v_Narc_df <- data.frame(V_Narc_s)
+
+F_arc_df <- data.frame(F_arch_s)
+M_Narc_df <- data.frame(M_arch_s)
+
+#add new column named "cat" (for category)
+arc_df$cat <- "Inland Pastoralist" #archaeological points
+Narc_df$cat <- "Non-Arc-Mikea" #non-archaeological points
+v_arc_df$cat <- "Coastal Communities" #archaeological points
+v_Narc_df$cat <- "Non-Arc-Velo" #non-archaeological points
+
+F_arc_df$cat <- "Fishing/Foraging (only)"
+M_Narc_df$cat <- "Mixed Subsistence"
+#combine both dataframes into a single dataframe
+df <- rbind(arc_df, v_arc_df, F_arc_df, M_Narc_df)
+
+#Separability Test
+M_b1 <- abs((mean(arc_df$layer.1)-mean(v_arc_df$layer.1))/(sd(arc_df$layer.1)+sd(v_arc_df$layer.1)))
+M_b2 <- abs((mean(arc_df$layer.2)-mean(v_arc_df$layer.2))/(sd(arc_df$layer.2)+sd(v_arc_df$layer.2)))
+M_b3 <- abs((mean(arc_df$layer.3)-mean(v_arc_df$layer.3))/(sd(arc_df$layer.3)+sd(v_arc_df$layer.3)))
+M_b4 <- abs((mean(arc_df$layer.4)-mean(v_arc_df$layer.4))/(sd(arc_df$layer.4)+sd(v_arc_df$layer.4)))
+
+M_b1
+M_b2
+M_b3
+M_b4
+
+wilcox.test(arc_df$layer.1, v_arc_df$layer.1)
+wilcox.test(arc_df$layer.2, v_arc_df$layer.2)
+wilcox.test(arc_df$layer.3, v_arc_df$layer.3)
+wilcox.test(arc_df$layer.4, v_arc_df$layer.4)
+
+D_B1 <- median(arc_df$layer.1-Narc_df$layer.1)
+D_B2 <- median(arc_df$layer.2-Narc_df$layer.2)
+D_B3 <- median(arc_df$layer.3-Narc_df$layer.3)
+D_B4 <- median(arc_df$layer.4-Narc_df$layer.4)
+
+D_B1v <- median(v_arc_df$layer.1-v_Narc_df$layer.1)
+D_B2v <- median(v_arc_df$layer.2-v_Narc_df$layer.2)
+D_B3v <- median(v_arc_df$layer.3-v_Narc_df$layer.3)
+D_B4v <- median(v_arc_df$layer.4-v_Narc_df$layer.4)
+
+
+#Calculate average non-archaeological values
+#wet season
+NA_B_V <- mean(N_Narc[,1])
+NA_B_M <- mean(V_Narc[,1])
+NA_B <- (NA_B_V+NA_B_M)/2
+
+NA_G_V <- mean(N_Narc[,2])
+NA_G_M <- mean(V_Narc[,2])
+NA_G <- (NA_G_V+NA_G_M)/2
+
+NA_R_V <- mean(N_Narc_WS[,3])
+NA_R_M <- mean(V_Narc_WS[,3])
+NA_R <- (NA_R_V+NA_R_M)/2
+
+NA_NIR_V <- mean(N_Narc[,4])
+NA_NIR_M <- mean(V_Narc[,4])
+NA_NIR <- (NA_NIR_V+NA_NIR_M)/2
+
+#arrange order of boxplots
+df$cat <- factor(df$cat, c("Coastal Communities", "Inland Pastoralist", "Fishing/Foraging (only)", "Mixed Subsistence", "Non-Arc-Velo", "Non-Arc-Mikea"))
+
+
+B1 <- ggplot(df, aes(df, fill=cat))+
+  geom_boxplot(aes(cat, layer.1))+
+  xlab("Land use Type")+
+  ylab("\u0394 Blue")+      #\u0394 is unicode symbol for Δ
+  theme(axis.text = element_text(size = 20))+
+  theme(axis.title = element_text(size = 20))+
+  theme(axis.text.x=element_blank(),
+        legend.position = "none")+
+  geom_hline(yintercept=NA_B, color="#006600", linetype="dotted", size=1.5)
+
+B2 <- ggplot(df, aes(df, fill=cat))+
+  geom_boxplot(aes(cat, layer.2))+
+  xlab("Land use Type")+
+  ylab("\u0394 Green")+
+  theme(axis.text = element_text(size = 20))+
+  theme(axis.title = element_text(size = 20))+
+  theme(axis.text.x=element_blank(),
+        legend.position = "none")+
+  geom_hline(yintercept=NA_G, color="#006600", linetype="dotted", size=1.5)
+
+B3 <- ggplot(df, aes(df, fill=cat))+
+  geom_boxplot(aes(cat, layer.3))+
+  xlab("Land use Type")+
+  ylab("\u0394 Red")+
+  theme(axis.text = element_text(size = 20))+
+  theme(axis.title = element_text(size = 20))+
+  theme(axis.text.x=element_blank(),
+        legend.position = "none")+
+  geom_hline(yintercept=NA_R, color="#006600", linetype="dotted", size=1.5)
+
+B4 <- ggplot(df, aes(df, fill=cat))+
+  geom_boxplot(aes(cat, layer.4))+
+  xlab("Land use Type")+
+  ylab("\u0394 NIR")+
+  theme(legend.text = element_text(size = 20))+
+  theme(axis.text = element_text(size = 20))+
+  theme(axis.title = element_text(size = 20))+
+  theme(axis.text.x=element_blank(),
+        legend.title = element_blank(),
+        legend.position="bottom")+
+  geom_hline(yintercept=NA_NIR, color="#006600", linetype="dotted", size=1.5)
+
+gridExtra::grid.arrange(B1, B2, B3, B4, ncol=2, nrow=2)
+
+```
+
+Vegetative (NDVI) Analysis for Wet and Dry Seasons
+```{r}
+#Extract raster values at each archaeological point location for NDVI
+Arc_NDVI_WS=extract(NDVI_Feb, arch_points, buffer=20, fun=mean)
+NArc_NDVI_WS=extract(NDVI_Feb, non_arch_points, buffer=20, fun=mean)
+
+
+V_arch_NDVI_WS=extract(NDVI_Feb, V_arch_points, buffer=20, fun=mean)
+V_Narc_NDVI_WS=extract(NDVI_Feb, V_non_arch_points, buffer=20, fun=mean)
+
+M_arc_VI_WS=extract(NDVI_Feb, M_arch_points, buffer=20, fun=mean)
+M_arc_VI_WS <- na.omit(M_arc_VI_WS)
+F_arc_VI_WS=extract(NDVI_Feb, F_arch_points, buffer=20, fun=mean)
+F_arc_VI_WS <- na.omit(F_arc_VI_WS)
+
+#standardize values for wet season
+Arc_WS_s <- standard(Arc_NDVI_WS, NArc_NDVI_WS) 
+NArc_WS_s <- standard(NArc_NDVI_WS, NArc_NDVI_WS)
+V_arch_WS_s <- standard(V_arch_NDVI_WS, NArc_NDVI_WS) 
+V_Narc_WS_s <- standard(V_Narc_NDVI_WS, V_Narc_NDVI_WS) #don't standardize
+
+F_arch_WS_s <- standard(F_arc_VI_WS, NArc_NDVI_WS)
+M_arch_WS_s <- standard(M_arc_VI_WS, NArc_NDVI_WS)
+
+#make data frames from each raster point table
+arcNDVI_df <- data.frame(Arc_WS_s)
+NarcNDVI_df <- data.frame(NArc_WS_s)
+V_arch_NDVI_df <- data.frame(V_arch_WS_s)
+V_Narc_NDVI_df <- data.frame(V_Narc_WS_s)
+M_arc_VI_df <- data.frame(M_arch_WS_s)
+F_arc_VI_df <- data.frame(F_arch_WS_s)
+
+#add new column named "cat" (for category)
+arcNDVI_df$cat <- "Inland Pastoralist" #archaeological points
+NarcNDVI_df$cat <- "Non Arch" 
+V_arch_NDVI_df$cat <- "Coastal Communities" 
+V_Narc_NDVI_df$cat <- "Non Arch Velo."
+M_arc_VI_df$cat <- "Mixed Subsistence"
+F_arc_VI_df$cat <- "Fishing/Foraging Only"
+
+
+#Statistical tests for normality and independence
+shapiro.test(arcNDVI_df$Arc_WS_s)
+shapiro.test(NarcNDVI_df$NArc_WS_s)
+shapiro.test(V_arch_NDVI_df$V_arch_WS_s)
+shapiro.test(V_Narc_NDVI_df$V_Narc_WS_s)
+shapiro.test(M_arc_VI_df$M_arch_WS_s)
+shapiro.test(F_arc_VI_df$F_arch_WS_s)
+
+wilcox.test(arcNDVI_df$Arc_WS_s, NarcNDVI_df$NArc_WS_s)
+wilcox.test(arcNDVI_df$Arc_WS_s, V_arch_NDVI_df$V_arch_WS_s) #*
+wilcox.test(V_arch_NDVI_df$V_arch_WS_s, V_Narc_NDVI_df$V_Narc_WS_s)#***
+wilcox.test(arcNDVI_df$Arc_WS_s, M_arc_VI_df$M_arch_WS_s)
+wilcox.test(arcNDVI_df$Arc_WS_s, F_arc_VI_df$F_arch_WS_s)#**
+
+#Calculate average non-archaeological values
+#wet season
+NDVI_WS_M <- mean(NArc_NDVI_WS)
+NDVI_WS_V <- mean(V_Narc_NDVI_WS)
+NDVI_WS <- (NDVI_WS_M+NDVI_WS_V)/2
+
+
+#PLOT RESULTS
+NDVI_A <- ggplot(arcNDVI_df, aes(arcNDVI_df))+
+  geom_boxplot(aes(cat, Arc_WS_s))+
+  xlab("")+
+  ylab("NDVI")+
+  ylim(-.3,.6)+
+  theme(axis.text = element_text(size = 12))+
+  theme(axis.title = element_text(size = 12))+
+  geom_hline(yintercept=NDVI_WS, color="#006600", linetype="dotted", size=1.5)
+  
+NDVI_NA <- ggplot(NarcNDVI_df, aes(NarcNDVI_df))+
+  geom_boxplot(aes(cat, NArc_WS_s))+
+  xlab("Non \nArchaeological")+
+  ylab("NDVI")+
+  ylim(-.3,.8)+
+  theme(axis.text = element_text(size = 12),
+        axis.text.y=element_blank())+
+  theme(axis.title = element_text(size = 12))+
+  geom_hline(yintercept=NDVI_WS, color="#006600", linetype="dotted", size=1.5)
+
+NDVI_V <- ggplot(V_arch_NDVI_df, aes(V_arch_NDVI_df))+
+  geom_boxplot(aes(cat, V_arch_WS_s))+
+  xlab("")+
+  ylab("NDVI")+
+  ylim(-.3,.6)+
+  theme(axis.text = element_text(size = 12),
+        axis.text.y=element_blank())+
+  theme(axis.title = element_text(size = 12))+
+  geom_hline(yintercept=NDVI_WS, color="#006600", linetype="dotted", size=1.5)
+
+NDVI_V_NA <- ggplot(V_Narc_NDVI_df, aes(V_Narc_NDVI_df))+
+  geom_boxplot(aes(cat, V_Narc_NDVI))+
+  xlab("")+
+  ylab("NDVI")+
+  ylim(-.3,.6)+
+  theme(axis.text = element_text(size = 12),
+        axis.text.y=element_blank())+
+  theme(axis.title = element_text(size = 12))+
+  geom_hline(yintercept=NDVI_WS, color="#006600", linetype="dotted", size=1.5)
+
+NDVI_M <- ggplot(M_arc_VI_df, aes(M_arc_VI_df))+
+  geom_boxplot(aes(cat, M_arch_WS_s))+
+  xlab("")+
+  ylab("NDVI")+
+  ylim(-.3,.6)+
+  theme(axis.text = element_text(size = 12),
+        axis.text.y=element_blank())+
+  theme(axis.title = element_text(size = 12))+
+  geom_hline(yintercept=NDVI_WS, color="#006600", linetype="dotted", size=1.5)
+
+NDVI_F <- ggplot(F_arc_VI_df, aes(F_arc_VI_df))+
+  geom_boxplot(aes(cat, F_arch_WS_s))+
+  xlab("")+
+  ylab("NDVI")+
+  ylim(-.3,.6)+
+  theme(axis.text = element_text(size = 12),
+        axis.text.y=element_blank())+
+  theme(axis.title = element_text(size = 12))+
+  geom_hline(yintercept=NDVI_WS, color="#006600", linetype="dotted", size=1.5)
+
+grid.arrange(NDVI_A,NDVI_V, NDVI_M, NDVI_F, ncol=4, nrow=1)
+
+
+#Extract raster values at each archaeological point location for NDVI
+Arc_NDVI_DS=extract(NDVI_Jun, arch_points, buffer=20, fun=mean)
+NArc_NDVI_DS=extract(NDVI_Jun, non_arch_points, buffer=20, fun=mean)
+
+
+V_arch_NDVI_DS=extract(NDVI_Jun, V_arch_points, buffer=20, fun=mean)
+V_Narc_NDVI_DS=extract(NDVI_Jun, V_non_arch_points, buffer=20, fun=mean)
+
+M_arc_VI_DS=extract(NDVI_Jun, M_arch_points, buffer=20, fun=mean)
+M_arc_VI_DS <- na.omit(M_arc_VI_DS)
+F_arc_VI_DS=extract(NDVI_Jun, F_arch_points, buffer=20, fun=mean)
+F_arc_VI_DS <- na.omit(F_arc_VI_DS)
+
+#standardize values for wet season
+Arc_DS_s <- standard(Arc_NDVI_DS, NArc_NDVI_DS) 
+NArc_DS_s <- standard(NArc_NDVI_DS, NArc_NDVI_DS)
+V_arch_DS_s <- standard(V_arch_NDVI_DS, NArc_NDVI_DS) 
+V_Narc_DS_s <- standard(V_Narc_NDVI_DS, V_Narc_NDVI_DS) #don't standardize
+
+F_arch_DS_s <- standard(F_arc_VI_DS, NArc_NDVI_DS)
+M_arch_DS_s <- standard(M_arc_VI_DS, NArc_NDVI_DS)
+
+
+#make data frames from each raster point table
+arcNDVI_df <- data.frame(Arc_DS_s)
+NarcNDVI_df <- data.frame(NArc_DS_s)
+V_arch_NDVI_df <- data.frame(V_arch_DS_s)
+V_Narc_NDVI_df <- data.frame(V_Narc_DS_s)
+M_arc_VI_df <- data.frame(M_arch_DS_s)
+F_arc_VI_df <- data.frame(F_arch_DS_s)
+
+#add new column named "cat" (for category)
+arcNDVI_df$cat <- "Inland Pastoralist" #archaeological points
+NarcNDVI_df$cat <- "Non Arch" 
+V_arch_NDVI_df$cat <- "Coastal Communities" 
+V_Narc_NDVI_df$cat <- "Non Arch Velo."
+M_arc_VI_df$cat <- "Mixed Subsistence"
+F_arc_VI_df$cat <- "Fishing/Foraging Only"
+
+#Statistical tests for normality and independence
+shapiro.test(arcNDVI_df$Arc_DS_s)
+shapiro.test(NarcNDVI_df$NArc_DS_s)
+shapiro.test(V_arch_NDVI_df$V_arch_DS_s)
+shapiro.test(V_Narc_NDVI_df$V_Narc_DS_s)
+shapiro.test(M_arc_VI_df$M_arch_DS_s)
+shapiro.test(F_arc_VI_df$F_arch_DS_s)
+
+wilcox.test(arcNDVI_df$Arc_DS_s, NarcNDVI_df$NArc_DS_s)
+wilcox.test(arcNDVI_df$Arc_DS_s, V_arch_NDVI_df$V_arch_DS_s)
+wilcox.test(V_arch_NDVI_df$V_arch_DS_s, V_Narc_NDVI_df$V_Narc_DS_s)
+wilcox.test(arcNDVI_df$Arc_DS_s, M_arc_VI_df$M_arch_DS_s)#*
+wilcox.test(arcNDVI_df$Arc_DS_s, F_arc_VI_df$F_arch_DS_s)#**
+
+
+#Calculate average non-archaeological values
+#wet season
+NDVI_DS_M <- mean(NArc_NDVI_DS)
+NDVI_DS_V <- mean(V_Narc_NDVI_DS)
+NDVI_DS <- (NDVI_DS_M+NDVI_DS_V)/2
+
+#Plot Results
+
+NDVI_A <- ggplot(arcNDVI_df, aes(arcNDVI_df))+
+  geom_boxplot(aes(cat, Arc_DS_s))+
+  xlab("")+
+  ylab("NDVI")+
+  ylim(-.1,.5)+
+  theme(axis.text = element_text(size = 12))+
+  theme(axis.title = element_text(size = 12))+
+  geom_hline(yintercept=NDVI_DS, color="#006600", linetype="dotted", size=1.5)
+
+
+NDVI_V <- ggplot(V_arch_NDVI_df, aes(V_arch_NDVI_df))+
+  geom_boxplot(aes(cat, V_arch_DS_s))+
+  xlab("")+
+  ylab("NDVI")+
+  ylim(-.1,.5)+
+  theme(axis.text = element_text(size = 12),
+        axis.text.y=element_blank())+
+  theme(axis.title = element_text(size = 12))+
+  geom_hline(yintercept=NDVI_DS, color="#006600", linetype="dotted", size=1.5)
+
+NDVI_M <- ggplot(M_arc_VI_df, aes(M_arc_VI_df))+
+  geom_boxplot(aes(cat, M_arch_DS_s))+
+  xlab("")+
+  ylab("NDVI")+
+  ylim(-.1,.5)+
+  theme(axis.text = element_text(size = 12),
+        axis.text.y=element_blank())+
+  theme(axis.title = element_text(size = 12))+
+  geom_hline(yintercept=NDVI_DS, color="#006600", linetype="dotted", size=1.5)
+
+NDVI_F <- ggplot(F_arc_VI_df, aes(F_arc_VI_df))+
+  geom_boxplot(aes(cat, F_arch_DS_s))+
+  xlab("")+
+  ylab("NDVI")+
+  ylim(-.1,.5)+
+  theme(axis.text = element_text(size = 12),
+        axis.text.y=element_blank())+
+  theme(axis.title = element_text(size = 12))+
+  geom_hline(yintercept=NDVI_DS, color="#006600", linetype="dotted", size=1.5)
+
+
+grid.arrange(NDVI_A,NDVI_V, NDVI_M, NDVI_F, ncol=4, nrow=1)
+
+```
+
+Vegetative (NDVI) Analysis of Annual Variation
+```{r}
+##ASSESS VEGETATION DIVERSITY/HEALTH CHANGES ACROSS SEASONS
+
+VI_Dif <- abs(NDVI_Feb - NDVI_Jun)
+
+#Extract raster values at each archaeological point location for NDVI
+Arc_NDVI_D=extract(VI_Dif, arch_points, buffer=20, fun=mean)
+NArc_NDVI_D=extract(VI_Dif, non_arch_points, buffer=20, fun=mean)
+
+
+V_arch_NDVI_D=extract(VI_Dif, V_arch_points, buffer=20, fun=mean)
+V_Narc_NDVI_D=extract(VI_Dif, V_non_arch_points, buffer=20, fun=mean)
+
+M_arc_VI_D=extract(VI_Dif, M_arch_points, buffer=20, fun=mean)
+M_arc_VI_D <- na.omit(M_arc_VI_D)
+F_arc_VI_D=extract(VI_Dif, F_arch_points, buffer=20, fun=mean)
+F_arc_VI_D <- na.omit(F_arc_VI_D)
+
+#standardize NDVI values against non-archaeological zones
+Arc_s <- standard(Arc_NDVI_D, NArc_NDVI_D) 
+NArc_s <- standard(NArc_NDVI_D, NArc_NDVI_D)
+V_arch_s <- standard(V_arch_NDVI_D, NArc_NDVI_D) 
+V_Narc_s <- standard(V_Narc_NDVI_D, V_Narc_NDVI_D) #don't standardize
+
+F_arc_s <- standard(F_arc_VI_D, NArc_NDVI_D)
+M_arc_s <- standard(M_arc_VI_D, NArc_NDVI_D)
+
+#make data frames from each raster point table
+arcNDVI_df <- data.frame(Arc_s)
+NarcNDVI_df <- data.frame(NArc_s)
+V_arch_NDVI_df <- data.frame(V_arch_s)
+V_Narc_NDVI_df <- data.frame(V_Narc_s)
+M_arc_VI_df <- data.frame(M_arc_s)
+F_arc_VI_df <- data.frame(F_arc_s)
+
+
+wilcox.test(arcNDVI_df$Arc_s, NarcNDVI_df$NArc_s)
+wilcox.test(V_arch_NDVI_df$V_arch_s, V_Narc_NDVI_df$V_Narc_s)#**
+
+
+#add new column named "cat" (for category)
+arcNDVI_df$cat <- "Pastoralist" #archaeological points
+NarcNDVI_df$cat <- "Non Arch" #archaeological points
+V_arch_NDVI_df$cat <- "Velondriake" #non-archaeological points
+V_Narc_NDVI_df$cat <- "Non Arch Velo."
+M_arc_VI_df$cat <- "Mixed Subsistence"
+F_arc_VI_df$cat <- "Foraging Only"
+
+#Calculate average non-archaeological values
+NDVI_M <- mean(NArc_NDVI_D)
+NDVI_V <- mean(V_Narc_NDVI_D)
+NDVI_A <- (NDVI_M+NDVI_V)/2
+
+
+NDVI_Arc <- ggplot(arcNDVI_df, aes(arcNDVI_df))+
+  geom_boxplot(aes(cat, Arc_s))+
+  xlab("")+
+  ylab("\u0394 NDVI")+
+  ylim(0,.4)+
+  theme(axis.text = element_text(size = 12))+
+  theme(axis.title = element_text(size = 12))+
+  geom_hline(yintercept=NDVI_A, color="#006600", linetype="dotted", size=1.5)
+
+NDVI_V <- ggplot(V_arch_NDVI_df, aes(V_arch_NDVI_df))+
+  geom_boxplot(aes(cat, V_arch_s))+
+  xlab("")+
+  ylab("\u0394 NDVI")+
+  ylim(0,.4)+
+  theme(axis.text = element_text(size = 12),
+        axis.text.y=element_blank())+
+  theme(axis.title = element_text(size = 20))+
+  geom_hline(yintercept=NDVI_A, color="#006600", linetype="dotted", size=1.5)
+
+NDVI_Mix <- ggplot(M_arc_VI_df, aes(M_arc_VI_df))+
+  geom_boxplot(aes(cat, M_arc_s))+
+  xlab("")+
+  ylab("\u0394 NDVI")+
+  ylim(0,.4)+
+  theme(axis.text = element_text(size = 12),
+        axis.text.y=element_blank())+
+  theme(axis.title = element_text(size = 12))+
+  geom_hline(yintercept=NDVI_A, color="#006600", linetype="dotted", size=1.5)
+
+NDVI_FF <- ggplot(F_arc_VI_df, aes(F_arc_VI_df))+
+  geom_boxplot(aes(cat, F_arc_s))+
+  xlab("")+
+  ylab("\u0394 NDVI")+
+  ylim(0,.4)+
+  theme(axis.text = element_text(size = 12),
+        axis.text.y=element_blank())+
+  theme(axis.title = element_text(size = 12))+
+  geom_hline(yintercept=NDVI_A, color="#006600", linetype="dotted", size=1.5)
+
+grid.arrange(NDVI_Arc, NDVI_V,
+             NDVI_Mix, NDVI_FF, ncol=2, nrow=2)
+
+```
+
