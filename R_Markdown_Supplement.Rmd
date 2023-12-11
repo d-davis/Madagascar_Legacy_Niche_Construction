@@ -26,29 +26,29 @@ library(ggplot2)
 setwd("C:/Users/dylan/Documents/School_Work/Dissertation/SPARC_Namonte")
 
 #load archaeological point file
-arch_points <- readOGR(dsn = "Mikea_Survey_2018.shp")
+arch_points <- as(st_read("Mikea_Survey_2018.shp"), "Spatial")
 
 #load ground-tested non-archaeological point locations 
 
 
-non_arch_points <- readOGR(dsn = "Non_Arch_Points.shp")
+non_arch_points <- as(st_read("Non_Arch_Points.shp"), "Spatial")
 
 ##Foraging Site Analysis
 
 #set working directory
 setwd("C:/Users/dylan/Documents/School_Work/Dissertation/GEE_test/Planet_test")
 
-V_arch_points <- readOGR(dsn = "Arch_total_pts.shp")
+V_arch_points <- as(st_read("Arch_total_pts.shp"), "Spatial")
 
-V_non_arch_points <- readOGR(dsn = "non_arch_pts.shp")
+V_non_arch_points <- as(st_read("non_arch_pts.shp"), "Spatial")
 
 ##Mixed subsistence analysis
 #set working directory
 setwd("C:/Users/dylan/Documents/School_Work/Madagascar Projects/NCT_Project") #replace with the full path to file that you are working with
 
-F_arch_points <- readOGR(dsn = "Foraging_Sites_19_20.shp") #primarily foraging
+F_arch_points <- as(st_read("Foraging_Sites_19_20.shp"), "Spatial") #primarily foraging
 
-M_arch_points <- readOGR(dsn = "Mixed_Sites_v2.shp") #mixed subsistence
+M_arch_points <- as(st_read("Mixed_Sites_v2.shp"), "Spatial") #mixed subsistence
 
 #Create Median Averaged Images for Multitemporal Analysis
 
