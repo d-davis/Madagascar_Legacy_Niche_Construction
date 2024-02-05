@@ -6,7 +6,7 @@ General Information
 
 ### Title:
 
-*Data and Code for "Evidence for extensive social networks as risk-mitigation strategies on Southwest Madagascar"*
+*Data and Code for "Geophysics elucidate long-term socio-ecological dynamics of foraging, pastoralism, and mixed subsistence strategies on SW Madagascar"*
 
 ### Author Information:
 
