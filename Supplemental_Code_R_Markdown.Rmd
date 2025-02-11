@@ -1,0 +1,195 @@
+---
+title: "Legacy_Land_Use_Impacts"
+author: "Dylan S. Davis"
+date: "2024-05-30"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+
+## Load Libraries and datasets
+```{r}
+library(ggplot2)
+library(gridExtra)
+library(performance)
+library(broom)
+library(MASS)
+library(boot)
+library(olsrr)
+
+setwd("C:/Users/dylan/Documents/School_Work/Madagascar Projects/NCT_Project")
+
+NPP <- read.csv("AI_Assessment/NPP_Data.csv")
+
+Sim_Data <- read.csv("AI_Assessment/Sim_Data_v2.csv")
+
+comb_data <- read.csv("AI_Assessment/Combined_Data_V3.csv")
+```
+
+We now have three different datasets: 
+1) An archaeological datasets of confirmed sites
+2) A simulated dataset derived from machine learning
+3) A combined dataset consisting of the confirmed archaeological sites
+and machine-learning derived sites
+
+The machine learning dataset attained an overall accuracy of 77%.
+
+##Assess datasets for normality
+```{r}
+##Assess normality using standard linear model
+Arch_model <- lm(NPP~Economy, data=NPP)
+
+ols_plot_resid_qq(Arch_model)
+ols_test_normality(Arch_model)
+ols_test_correlation(Arch_model)
+ols_plot_resid_fit(Arch_model)
+ols_plot_resid_hist(Arch_model)
+
+##Residuals are slightly skewed 
+
+Sim_model <- lm(NPP~Economy, data=Sim_Data)
+
+ols_plot_resid_qq(Sim_model)
+ols_test_normality(Sim_model)
+ols_test_correlation(Sim_model)
+ols_plot_resid_fit(Sim_model)
+ols_plot_resid_hist(Sim_model)
+##Residuals are normal 
+```
+
+
+## Assess relationship between human land-use activity and ecological productivity
+
+```{r}
+##Create GLMs of data     
+
+#Archaeological Dataset
+econ_model_arch <- glm(NPP~Economy, data=NPP, family = quasi(link="log", variance="mu"))
+
+summary(econ_model_arch)
+
+plot(econ_model_arch)
+
+
+#Calculate R2 values
+R2_NPP <- 1 - (econ_model_arch$deviance/econ_model_arch$null.deviance)
+
+#Simulated Dataset
+econ_model_sim <- glm(NPP~Economy, data=Sim_Data, family = poisson)
+
+summary(econ_model_sim)
+plot(econ_model_sim)
+
+
+
+R2_sim <- 1 - (econ_model_sim$deviance/econ_model_sim$null.deviance)
+
+#Combined Simulated-Archaeological Dataset
+econ_model_comb <- glm(NPP~Economy, data=comb_data, family = poisson)
+
+
+summary(econ_model_comb)
+plot(econ_model_comb)
+
+
+plot(residuals(econ_model_comb) ~
+       predict(econ_model_comb,type="terms"),xlab=expression(hat(mu)),ylab="Deviance residuals",pch=20,col="red")
+
+
+
+EM_R2_comb <- 1 - (econ_model_comb$deviance/econ_model_comb$null.deviance)
+
+
+```
+
+These results show some discrepencies between the archaeological dataset and the machine-learning derived dataset. Given the fact that the archaeological dataset is relatively small and was opportunistically acquired, the question becomes which of these is more trustworthy.
+
+Based on the residuals, the machine-learning derived dataset appears to be the least biased, but we can further assess this using boostrapping methods.
+
+
+##Bootstrap Analysis
+
+```{r}
+# Creating Function to obtain R-Squared from the data
+r_squared <- function(formula, data, indices) {
+  val <- data[indices,] # selecting sample with boot 
+  fit <- lm(formula, data=val)
+  return(summary(fit)$r.square)
+} 
+
+#Formula to obtain regression coefficient weights
+bs <- function(formula, data, indices)
+{
+  d <- data[indices,] # allows boot to select sample
+  fit <- lm(formula, data=d)
+  return(coef(fit))
+}
+
+```
+
+The above code creates two formulas for statistics to evalaute our different datasets and their relationship to NPP.
+
+```{r}
+arch_output <- boot(data=NPP, statistic=bs, 
+                   R=1000, formula=NPP~Economy)
+
+boot.ci(arch_output, type = c("norm", "basic", "perc", "bca"))
+
+
+plot(arch_output, index=1) # foraging/fishing
+plot(arch_output, index=2) # Mixed
+plot(arch_output, index=3) # Non-Anth
+plot(arch_output, index=4) # Pastoral
+
+arch_output
+plot(arch_output)
+summary(arch_output)
+```
+
+The archaeological dataset produces decent results regardless of XXXXXX
+
+```{r}
+sim_output <- boot(data=Sim_Data, statistic=bs, 
+               R=1000, formula=NPP~Economy)
+
+sim_output
+plot(sim_output)
+
+plot(sim_output, index=1) # foraging/fishing
+plot(sim_output, index=2) # Mixed
+plot(sim_output, index=3) # Non-Anth
+plot(sim_output, index=4) # Pastoral
+summary(sim_output)
+
+# Obtaining a confidence interval of 95%
+boot.ci(sim_output, type = c("norm", "basic", "perc", "bca"))
+```
+
+The machine-learning derived dataset also performs well but has a smaller Confidence interval.
+
+
+```{r}
+comb_output <- boot(data=comb_data, statistic=bs, 
+               R=1000, formula=NPP~Economy)
+
+comb_output
+plot(comb_output)
+
+plot(sim_output, index=1) # foraging/fishing
+plot(sim_output, index=2) # Mixed
+plot(sim_output, index=3) # Non-Anth
+plot(sim_output, index=4) # Pastoral
+summary(sim_output)
+
+# Obtaining a confidence interval of 95%
+boot.ci(sim_output, type = c("norm", "basic", "perc", "bca"))
+```
+
+Taken alongside the residuals, the machine learning derived dataset helps to alleviate the potential biases present in the archaeological data, alone. As such, we use the combined dataset consisting of both confirmed archaeological data and machine-learning derived information.

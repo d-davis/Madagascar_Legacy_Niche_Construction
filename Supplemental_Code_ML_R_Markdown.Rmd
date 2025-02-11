@@ -1,0 +1,132 @@
+---
+title: "ML_Analysis_Madagacar"
+author: "Dylan S. Davis"
+date: "2024-06-13"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+## Load Libraries and datasets
+```{r}
+library(RStoolbox)
+library(caret)
+library(MIAmaxent)
+library(randomForest)
+library(raster)
+library(sf)
+
+library(e1071)
+library(spatstat)
+library(stars)
+library(rgeos)#being depreciated
+library(dplyr)
+library(maptools)#being depreciated
+library(sp) #being depreciated
+
+
+#set working directory
+setwd("C:/Users/dylan/Documents/School_Work/Madagascar Projects/NCT_Project")
+
+#create polygon of study region
+#AOI <- rgdal::readOGR("ML_AOI.shp")
+AOI <- as(st_read("ML_AOI.shp"), "Spatial")
+#AOI_prj <- sp::spTransform(AOI, CRS("EPSG:32738")) #will be depreciated
+AOI_prj <- sf::st_transform(sf::st_as_sf(AOI), "EPSG:32738")
+
+
+#Load image files
+#PlanetScope
+F_B1 <- raster::raster("Feb_Med.tif", band = 1)
+F_B2 <- raster::raster("Feb_Med.tif", band = 2)
+F_B3 <- raster::raster("Feb_Med.tif", band = 3)
+F_B4 <- raster::raster("Feb_Med.tif", band = 4)
+
+#Load Sentinel-2 SWIR bands
+F_SB9 <- raster::raster("S2_Feb_17_22.tif", band = 9)
+F_SB10 <- raster::raster("S2_Feb_17_22.tif", band = 10)
+
+SWIR_stk <- raster::stack(F_SB9, F_SB10)
+SWIR_prj <- raster::projectRaster(SWIR_stk, crs="+init=epsg:32738") #reproject raster
+SWIR_clp <- crop(SWIR_prj, AOI)
+
+F_SB9 <- raster::raster("S2_SWIR_PS.tif", band = 1)
+F_SB10 <- raster::raster("S2_SWIR_PS.tif", band = 2)
+
+
+#Pan sharpen SWIR data using Planet imagery (data fusion from 20m to 3m)
+##Uses RStoolbox package
+SWIR_PS <- RStoolbox::panSharpen(SWIR_clp, F_B4, method='pca')
+
+raster::writeRaster(SWIR_PS, filename = "S2_SWIR_PS.tif") #Save Pansharpened image as tiff file for later use
+
+
+Wet_raster <- raster::stack(F_B1, F_B2, F_B3, F_B4, F_SB9, F_SB10)
+
+#Load training data
+#train <- rgdal::readOGR("Training_Data_v6.shp") #ML_Training_v3 for subsistence, v2 for arch/non-arch
+train <- as(st_read("Training_Data_v6.shp"), "Spatial")
+train_clp <- raster::crop(train, Wet_raster)
+train_prj <- sf::st_transform(sf::st_as_sf(train_clp), "EPSG:32738")
+
+#train_buf <- gBuffer(train_prj, width = 5, byid = TRUE)
+
+#Load validation data
+val_dat <- as(st_read("ML_Validation_Data.shp"), "Spatial")
+val_clp <- raster::crop(val_dat, Wet_raster)
+val_prj <- sf::st_transform(sf::st_as_sf(val_clp), "EPSG:32738")
+
+
+
+```
+
+With the training data and images prepared, we can now train machine learning algorithms. Here we focus on three different models (see Materials and Methods for details) and train each one twice; once per season.
+
+```{r}
+############################################
+################ Wet Season ################
+############################################
+
+## Fit classifier (splitting training into 80\% training data, 20\% validation data)
+## For a probability classification, add the parameter: predType ="prob"
+
+Wet_SC       <- RStoolbox::superClass(Wet_raster, trainData = train_prj, responseCol = "Class", 
+                       algorithm = "maxent", tuneLength = 1, trainPartition = 0.8, filename = "W_Mxent_t3.tif") 
+
+Wet_SC #Display model results, accuracy metrics, and confusion matrix
+
+Wet_RF       <- RStoolbox::superClass(Wet_raster, trainData = train_prj, responseCol = "Class", 
+                                      model = "rf", tuneLength = 1, trainPartition = 0.8, filename = "Wet_RF.tif") 
+
+Wet_RF
+
+Wet_SVM       <- RStoolbox::superClass(Wet_raster, trainData = train_prj, responseCol = "Class", 
+                                      model = "svmRadial", tuneLength = 1, trainPartition = 0.8, filename = "Wet_SVM.tif") 
+
+Wet_SVM
+
+############################################
+########Same Process with Dry Season########
+############################################
+
+Dry_RF       <- RStoolbox::superClass(Dry_raster, trainData = train_clp, responseCol = "Class", 
+                                      model = "rf", tuneLength = 1, trainPartition = 0.8, filename = "Dry_RF.tif") 
+
+Dry_RF
+
+Ann_RF       <- RStoolbox::superClass(Annual, trainData = train_clp, responseCol = "Class", 
+                                      model = "rf", tuneLength = 1, trainPartition = 0.8, filename = "Ann_RF.tif") 
+
+Ann_RF
+
+```
+
+After evaluating each model, we can export the best performing model as a tiff file for further analysis.
+
