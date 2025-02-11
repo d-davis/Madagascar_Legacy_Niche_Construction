@@ -1,0 +1,246 @@
+FID,Economy,Category,Sitename,Elevation_,Chronology,NPP
+0,Non Arch,Non_Anth, , , ,0
+1,Non Arch,Non_Anth, , , ,0
+2,Non Arch,Non_Anth,G-30FR,8m, ,370
+3,Non Arch,Non_Anth,G-29FR,7m, ,371
+4,Non Arch,Non_Anth,G-27FR,9m, ,371
+5,Non Arch,Non_Anth,G-27FR,4m, ,371
+6,Non Arch,Non_Anth,G-26FR,1m, ,395
+7,Non Arch,Non_Anth,G-25FR,6m, ,394
+8,Non Arch,Non_Anth,G29HIR002,8m, ,372
+9,Non Arch,Non_Anth,G29HIR03,12m, ,371
+10,Non Arch,Non_Anth,G27HIR05,6m, ,395
+11,Non Arch,Non_Anth,G26HIR06,3m, ,395
+12,Non Arch,Non_Anth,G28HIR09,2m, ,1283
+13,Non Arch,Non_Anth,G30VA001,25, ,372
+14,Non Arch,Non_Anth,G30VA003,14, ,395
+15,Non Arch,Non_Anth,G29VA001,13, ,372
+16,Non Arch,Non_Anth,G29VA003,17, ,371
+17,Non Arch,Non_Anth,G27VA001,8, ,371
+18,Non Arch,Non_Anth,G28VA002,1m, ,372
+19,Non Arch,Non_Anth,Gi4HA,5m, ,819
+20,Non Arch,Non_Anth,Gi30HA,9m, ,370
+21,Non Arch,Non_Anth,Gi30HA,9m, ,372
+22,Non Arch,Non_Anth,Gi29HA,7m, ,371
+23,Non Arch,Non_Anth,Gi27HA,8m, ,395
+24,Non Arch,Non_Anth,Gi26HA,6m, ,393
+25,Non Arch,Non_Anth,Gi28HA,9m, ,1434
+26,Non Arch,Non_Anth,Gi28HA,6m, ,372
+27,Non Arch,Non_Anth,G30RO,10m, ,372
+28,Non Arch,Non_Anth,G30RO1,7m, ,371
+29,Non Arch,Non_Anth,G29RO,15m, ,372
+30,Non Arch,Non_Anth,G27RO,4m, ,371
+31,Non Arch,Non_Anth,G26RO1,0m, ,393
+32,Non Arch,Non_Anth,G25RO,3m, ,556
+33,Fishing/Foraging,Anth, , , ,441
+34,Fishing/Foraging,Anth, , , ,1191
+35,Fishing/Foraging,Anth, , , ,808
+36,Fishing/Foraging,Anth, , , ,463
+37,Fishing/Foraging,Anth, , , ,124
+38,Fishing/Foraging,Anth, , , ,762
+39,Fishing/Foraging,Anth, , , ,1170
+40,Fishing/Foraging,Anth, , , ,1180
+41,Fishing/Foraging,Anth, , , ,1402
+42,Fishing/Foraging,Anth, , , ,1141
+43,Fishing/Foraging,Anth, , , ,987
+44,Fishing/Foraging,Anth, , , ,0
+45,Fishing/Foraging,Anth, , , ,424
+46,Fishing/Foraging,Anth, , , ,0
+47,Fishing/Foraging,Anth, , , ,74
+48,Fishing/Foraging,Anth, , , ,74
+49,Fishing/Foraging,Anth, , , ,0
+50,Fishing/Foraging,Anth, , , ,99
+51,Fishing/Foraging,Anth, , , ,0
+52,Fishing/Foraging,Anth, , , ,0
+53,Fishing/Foraging,Anth, , , ,0
+54,Fishing/Foraging,Anth, , ,Late,0
+55,Non Arch,Non_Anth, , , ,1669
+56,Non Arch,Non_Anth, , , ,313
+57,Non Arch,Non_Anth, , , ,1494
+58,Non Arch,Non_Anth, , , ,1851
+59,Non Arch,Non_Anth, , , ,1696
+60,Non Arch,Non_Anth, , , ,34
+61,Non Arch,Non_Anth, , , ,139
+62,Non Arch,Non_Anth, , , ,25
+63,Non Arch,Non_Anth, , , ,2762
+64,Non Arch,Non_Anth, , , ,2536
+65,Non Arch,Non_Anth, , , ,2128
+66,Non Arch,Non_Anth, , , ,2996
+67,Non Arch,Non_Anth, , , ,2441
+68,Non Arch,Non_Anth, , , ,2377
+69,Non Arch,Non_Anth, , , ,626
+70,Pastoralist,Anth, , , ,626
+71,Pastoralist,Anth, , , ,626
+72,Pastoralist,Anth, , , ,1320
+73,Pastoralist,Anth, , , ,1650
+74,Pastoralist,Anth, , , ,1650
+75,Pastoralist,Anth, , , ,1302
+76,Pastoralist,Anth, , , ,1842
+77,Pastoralist,Anth, , , ,1551
+78,Pastoralist,Anth, , , ,986
+79,Pastoralist,Anth, , , ,1362
+80,Pastoralist,Anth, , , ,383
+81,Pastoralist,Anth, , , ,1013
+82,Pastoralist,Anth, , , ,793
+83,Pastoralist,Anth, , , ,967
+84,Pastoralist,Anth, , , ,54
+85,Pastoralist,Anth, , , ,54
+86,Fishing/Foraging,Anth, , , ,699
+87,Fishing/Foraging,Anth, , , ,610
+88,Fishing/Foraging,Anth, , , ,519
+89,Fishing/Foraging,Anth, , , ,1220
+90,Fishing/Foraging,Anth, , , ,286
+91,Fishing/Foraging,Anth, , , ,180
+92,Fishing/Foraging,Anth, , , ,531
+93,Fishing/Foraging,Anth, , , ,96
+94,Fishing/Foraging,Anth, , , ,1161
+95,Fishing/Foraging,Anth, , , ,348
+96,Fishing/Foraging,Anth, , , ,308
+97,Fishing/Foraging,Anth, , , ,254
+98,Fishing/Foraging,Anth, , , ,497
+99,Fishing/Foraging,Anth, , , ,204
+100,Fishing/Foraging,Anth, , , ,606
+101,Fishing/Foraging,Anth, , , ,556
+102,Fishing/Foraging,Anth, , , ,395
+103,Fishing/Foraging,Anth, , , ,371
+104,Fishing/Foraging,Anth, , , ,1434
+105,Fishing/Foraging,Anth, , , ,395
+106,Fishing/Foraging,Anth, , , ,370
+107,Fishing/Foraging,Anth, , , ,0
+108,Fishing/Foraging,Anth, , , ,0
+109,Fishing/Foraging,Anth, , , ,997
+110,Fishing/Foraging,Anth, , , ,0
+111,Fishing/Foraging,Anth, , , ,0
+112,Fishing/Foraging,Anth, , , ,0
+113,Fishing/Foraging,Anth, , , ,0
+114,Fishing/Foraging,Anth, , , ,0
+115,Fishing/Foraging,Anth, , , ,0
+116,Fishing/Foraging,Anth, , , ,935
+117,Fishing/Foraging,Anth, , , ,0
+118,Fishing/Foraging,Anth, , , ,609
+119,Fishing/Foraging,Anth, , , ,633
+120,Fishing/Foraging,Anth, , , ,0
+121,Fishing/Foraging,Anth, , , ,1206
+122,Fishing/Foraging,Anth, , , ,0
+123,Fishing/Foraging,Anth, , , ,259
+124,Fishing/Foraging,Anth, , , ,169
+125,Fishing/Foraging,Anth, , , ,329
+126,Fishing/Foraging,Anth, , , ,514
+127,Fishing/Foraging,Anth, , , ,441
+128,Fishing/Foraging,Anth, , , ,1382
+129,Fishing/Foraging,Anth, , , ,711
+130,Fishing/Foraging,Anth, , , ,582
+131,Fishing/Foraging,Anth, , , ,0
+132,Fishing/Foraging,Anth, , , ,316
+133,Fishing/Foraging,Anth, , , ,0
+134,Fishing/Foraging,Anth, , , ,769
+135,Fishing/Foraging,Anth, , , ,1317
+136,Fishing/Foraging,Anth, , , ,441
+137,Fishing/Foraging,Anth, , , ,691
+138,Fishing/Foraging,Anth, , , ,1191
+139,Fishing/Foraging,Anth, , , ,808
+140,Fishing/Foraging,Anth, , , ,0
+141,Fishing/Foraging,Anth, , , ,1164
+142,Fishing/Foraging,Anth, , , ,0
+143,Fishing/Foraging,Anth, , , ,0
+144,Fishing/Foraging,Anth, , , ,0
+145,Fishing/Foraging,Anth, , , ,0
+146,Fishing/Foraging,Anth, , , ,1519
+147,Fishing/Foraging,Anth, , , ,513
+148,Fishing/Foraging,Anth, , , ,871
+149,Fishing/Foraging,Anth, , , ,743
+150,Fishing/Foraging,Anth, , , ,859
+151,Fishing/Foraging,Anth, , , ,788
+152,Fishing/Foraging,Anth, , , ,717
+153,Fishing/Foraging,Anth, , , ,1850
+154,Fishing/Foraging,Anth, , , ,1850
+155,Fishing/Foraging,Anth, , , ,1101
+156,Fishing/Foraging,Anth, , , ,463
+157,Fishing/Foraging,Anth, , , ,623
+158,Fishing/Foraging,Anth, , , ,807
+159,Fishing/Foraging,Anth, , , ,1380
+160,Fishing/Foraging,Anth, , , ,62
+161,Fishing/Foraging,Anth, , , ,154
+162,Fishing/Foraging,Anth, , , ,124
+163,Fishing/Foraging,Anth, , , ,843
+164,Fishing/Foraging,Anth, , , ,1585
+165,Fishing/Foraging,Anth, , , ,762
+166,Fishing/Foraging,Anth, , , ,762
+167,Fishing/Foraging,Anth, , , ,1170
+168,Fishing/Foraging,Anth, , , ,852
+169,Fishing/Foraging,Anth, , , ,1180
+170,Fishing/Foraging,Anth, , , ,1718
+171,Fishing/Foraging,Anth, , , ,1402
+172,Fishing/Foraging,Anth, , , ,1141
+173,Fishing/Foraging,Anth, , , ,1402
+174,Fishing/Foraging,Anth, , , ,987
+175,Fishing/Foraging,Anth, , , ,581
+176,Fishing/Foraging,Anth, , , ,769
+177,Fishing/Foraging,Anth, , , ,869
+178,Fishing/Foraging,Anth, , , ,574
+179,Fishing/Foraging,Anth, , , ,821
+180,Fishing/Foraging,Anth, , , ,603
+181,Fishing/Foraging,Anth, , , ,918
+182,Fishing/Foraging,Anth, , , ,918
+183,Fishing/Foraging,Anth, , , ,0
+184,Fishing/Foraging,Anth, , , ,424
+185,Fishing/Foraging,Anth, , , ,424
+186,Fishing/Foraging,Anth, , , ,1283
+187,Fishing/Foraging,Anth, , , ,0
+188,Fishing/Foraging,Anth, , , ,0
+189,Fishing/Foraging,Anth, , , ,74
+190,Fishing/Foraging,Anth, , , ,74
+191,Fishing/Foraging,Anth, , , ,0
+192,Fishing/Foraging,Anth, , , ,0
+193,Fishing/Foraging,Anth, , , ,364
+194,Fishing/Foraging,Anth, , , ,99
+195,Fishing/Foraging,Anth, , , ,641
+196,Fishing/Foraging,Anth, , , ,1132
+197,Fishing/Foraging,Anth, , , ,0
+198,Fishing/Foraging,Anth, , , ,0
+199,Fishing/Foraging,Anth, , ,Late,0
+200,Fishing/Foraging,Anth, , , ,0
+201,Fishing/Foraging,Anth, , , ,0
+202,Fishing/Foraging,Anth, , ,Late,0
+203,Fishing/Foraging,Anth, , , ,372
+204,Fishing/Foraging,Anth, , , ,0
+205,Fishing/Foraging,Anth, , , ,0
+206,Fishing/Foraging,Anth, , , ,0
+207,Fishing/Foraging,Anth, , , ,948
+208,Fishing/Foraging,Anth, , , ,2425
+209,Fishing/Foraging,Anth, , , ,0
+210,Fishing/Foraging,Anth, , , ,0
+211,Fishing/Foraging,Anth, , , ,0
+212,Fishing/Foraging,Anth, , , ,1033
+213,Fishing/Foraging,Anth, , , ,1368
+214,Fishing/Foraging,Anth, , , ,1592
+215,Fishing/Foraging,Anth, , , ,2027
+216,Fishing/Foraging,Anth, , , ,1592
+217,Fishing/Foraging,Anth, , , ,0
+218,Fishing/Foraging,Anth, , , ,751
+219,Fishing/Foraging,Anth, , , ,751
+220,Fishing/Foraging,Anth, , , ,1292
+221,Mixed Econ,Anth, , , ,0
+222,Mixed Econ,Anth, , , ,0
+223,Mixed Econ,Anth, , , ,584
+224,Mixed Econ,Anth, , , ,388
+225,Mixed Econ,Anth, , , ,0
+226,Mixed Econ,Anth, , , ,0
+227,Mixed Econ,Anth, , ,Middle,831
+228,Mixed Econ,Anth, , , ,0
+229,Mixed Econ,Anth, , , ,0
+230,Mixed Econ,Anth, , ,Late,0
+231,Mixed Econ,Anth, , , ,204
+232,Mixed Econ,Anth, , , ,442
+233,Mixed Econ,Anth, , , ,0
+234,Mixed Econ,Anth, , ,Late,0
+235,Mixed Econ,Anth, , ,Late,0
+236,Mixed Econ,Anth, , , ,0
+237,Mixed Econ,Anth, , , ,0
+238,Mixed Econ,Anth, , ,Middle,0
+239,Mixed Econ,Anth, , , ,0
+240,Mixed Econ,Anth, , , ,124
+241,Mixed Econ,Anth, , , ,173
+242,Mixed Econ,Anth, , , ,0
+243,Mixed Econ,Anth, , , ,124
+244,Mixed Econ,Anth, , , ,124
